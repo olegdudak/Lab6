@@ -1,0 +1,24 @@
+# Core Django dependencies
+Django==6.0
+asgiref==3.11.0
+sqlparse==0.5.4
+tzdata==2025.2
+
+# Authentication & Security
+django-otp==1.6.3
+
+# Image processing
+Pillow==12.0.0
+
+# QR Code generation
+qrcode==8.2
+
+# Production server (uncomment for deployment)
+gunicorn==21.2.0
+whitenoise==6.7.0
+
+# Database (uncomment if using PostgreSQL in production)
+# psycopg2-binary==2.9.9
+
+# Environment variables
+python-decouple==3.8
