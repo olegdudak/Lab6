@@ -1,102 +1,90 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Run Django Server",
-			"type": "shell",
-			"command": "py",
-			"args": [
-				"manage.py",
-				"runserver"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/mysite"
-			},
-			"isBackground": true,
-			"problemMatcher": [],
-			"group": "build",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": false,
-				"panel": "new",
-				"showReuseMessage": true,
-				"clear": false
-			}
-		},
-		{
-			"label": "Install Django Dependencies",
-			"type": "shell",
-			"command": "py",
-			"args": [
-				"-m",
-				"pip",
-				"install",
-				"django",
-				"django-otp",
-				"qrcode",
-				"pillow"
-			],
-			"group": "build",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": true
-			}
-		},
-		{
-			"label": "Django Migrate",
-			"type": "shell",
-			"command": "py",
-			"args": [
-				"manage.py",
-				"migrate"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/mysite"
-			},
-			"group": "build",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": false,
-				"panel": "shared",
-				"showReuseMessage": true
-			}
-		},
-		{
-			"label": "Create Django Superuser",
-			"type": "shell",
-			"command": "py",
-			"args": [
-				"manage.py",
-				"createsuperuser"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}/mysite"
-			},
-			"group": "build",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "shared",
-				"showReuseMessage": true
-			}
-		},
-		{
-			"label": "Start Django",
-			"type": "shell",
-			"command": "py",
-			"args": [
-				"manage.py",
-				"runserver"
-			],
-			"isBackground": true,
-			"problemMatcher": [],
-			"group": "build"
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Django Server",
+      "type": "shell",
+      "command": "py",
+      "args": ["manage.py", "runserver"],
+      "options": {
+        "cwd": "${workspaceFolder}/mysite"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "Install Django Dependencies",
+      "type": "shell",
+      "command": "py",
+      "args": [
+        "-m",
+        "pip",
+        "install",
+        "django",
+        "django-otp",
+        "qrcode",
+        "pillow"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true
+      }
+    },
+    {
+      "label": "Django Migrate",
+      "type": "shell",
+      "command": "py",
+      "args": ["manage.py", "migrate"],
+      "options": {
+        "cwd": "${workspaceFolder}/mysite"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true
+      }
+    },
+    {
+      "label": "Create Django Superuser",
+      "type": "shell",
+      "command": "py",
+      "args": ["manage.py", "createsuperuser"],
+      "options": {
+        "cwd": "${workspaceFolder}/mysite"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true
+      }
+    },
+    {
+      "label": "Start Django",
+      "type": "shell",
+      "command": "py",
+      "args": ["manage.py", "runserver"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
 }

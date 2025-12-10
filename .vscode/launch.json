@@ -1,22 +1,19 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Django Server",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/mysite/manage.py",
-            "args": [
-                "runserver",
-                "127.0.0.1:8000"
-            ],
-            "django": true,
-            "autoReload": {
-                "enable": true
-            },
-            "cwd": "${workspaceFolder}/mysite",
-            "console": "integratedTerminal",
-            "justMyCode": false
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Django Server",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/mysite/manage.py",
+      "args": ["runserver", "127.0.0.1:8000"],
+      "django": true,
+      "autoReload": {
+        "enable": true
+      },
+      "cwd": "${workspaceFolder}/mysite",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
 }
