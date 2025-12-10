@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Контакти - MemeLand</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Навігаційна панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">🤣 MemeLand</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Головна</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">Про нас</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'contact' %}">Контакти</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog' %}">Блог</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h1 class="text-center mb-5">📧 Зв'яжіться з нами</h1>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-body text-center">
+                  <h3>📧 Email</h3>
+                  <p class="lead">contact@memeland.ua</p>
+                  <p>Для загальних питань, пропозицій та співпраці</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-body text-center">
+                  <h3>📱 Соціальні мережі</h3>
+                  <div class="d-flex justify-content-center gap-3">
+                    <a href="#" class="btn btn-primary">Facebook</a>
+                    <a href="#" class="btn btn-info">Twitter</a>
+                    <a href="#" class="btn btn-danger">Instagram</a>
+                  </div>
+                  <p class="mt-2">Слідкуйте за нами в соціальних мережах!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3>💌 Надіслати повідомлення</h3>
+              <form>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Ім'я</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="subject" class="form-label">Тема</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="subject"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="message" class="form-label">Повідомлення</label>
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    rows="5"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Надіслати 📤
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h3>🤝 Співпраця</h3>
+              <p>Ми завжди відкриті для співпраці! Якщо у вас є:</p>
+              <ul>
+                <li>Цікаві ідеї для статей про меми</li>
+                <li>Пропозиції щодо партнерства</li>
+                <li>Бажання стати автором на нашому блозі</li>
+                <li>Технічні питання або пропозиції</li>
+              </ul>
+              <p>
+                Не соромтеся зв'язатися з нами! Ми відповімо протягом 24 годин.
+              </p>
+
+              <div class="alert alert-info">
+                <strong>💡 Порада:</strong> Якщо ви хочете поділитися крутим
+                мемом або ідеєю для статті, обов'язково додайте детальний опис
+                та джерело!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <p>&copy; 2025 MemeLand. Створено з ❤️ для любителів мемів.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

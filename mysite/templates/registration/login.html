@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вхід - Мемний Блог</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'blog' %}">🤣 Мемний Блог</a>
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="{% url 'blog' %}">Головна</a>
+          <a class="nav-link" href="{% url 'register' %}">Реєстрація</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-5">
+          <div class="card login-card">
+            <div class="card-header bg-success text-white text-center">
+              <h4><i class="fas fa-sign-in-alt"></i> Вхід до системи</h4>
+            </div>
+            <div class="card-body p-5">
+              {% if messages %} {% for message in messages %}
+              <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                role="alert"
+              >
+                {{ message }}
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                ></button>
+              </div>
+              {% endfor %} {% endif %} {% if form.errors %}
+              <div class="alert alert-danger">
+                <strong>Помилка входу!</strong> Перевірте правильність введених
+                даних.
+              </div>
+              {% endif %}
+
+              <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label
+                    for="{{ form.username.id_for_label }}"
+                    class="form-label"
+                    >Ім'я користувача</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="fas fa-user"></i
+                    ></span>
+                    <input
+                      type="text"
+                      name="username"
+                      class="form-control"
+                      id="{{ form.username.id_for_label }}"
+                      required
+                    />
+                  </div>
+                  {% if form.username.errors %}
+                  <div class="text-danger">
+                    {% for error in form.username.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="mb-4">
+                  <label
+                    for="{{ form.password.id_for_label }}"
+                    class="form-label"
+                    >Пароль</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="fas fa-lock"></i
+                    ></span>
+                    <input
+                      type="password"
+                      name="password"
+                      class="form-control"
+                      id="{{ form.password.id_for_label }}"
+                      required
+                    />
+                  </div>
+                  {% if form.password.errors %}
+                  <div class="text-danger">
+                    {% for error in form.password.errors %}
+                    <small>{{ error }}</small>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                </div>
+
+                {% if show_2fa_field %}
+                <div class="mb-4">
+                  <label for="otp_token" class="form-label">2FA код</label>
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="fas fa-shield-alt"></i
+                    ></span>
+                    <input
+                      type="text"
+                      name="otp_token"
+                      class="form-control"
+                      id="otp_token"
+                      placeholder="123456"
+                      maxlength="6"
+                      required
+                    />
+                  </div>
+                  <small class="text-muted"
+                    >Введіть 6-значний код з додатку автентифікації</small
+                  >
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-success btn-lg w-100">
+                  <i class="fas fa-sign-in-alt"></i> Увійти
+                </button>
+
+                <input type="hidden" name="next" value="{{ next }}" />
+              </form>
+
+              <div class="text-center mt-3">
+                <p>
+                  Немаєте акаунта?
+                  <a href="{% url 'register' %}" class="text-success"
+                    >Зареєструйтеся</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </body>
+</html>

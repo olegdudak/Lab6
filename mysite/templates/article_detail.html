@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ article.title }} - MemeLand</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Навігаційна панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">🤣 MemeLand</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Головна</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">Про нас</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Контакти</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'blog' %}">Блог</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <!-- Хлібні крихти -->
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="{% url 'index' %}">Головна</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="{% url 'blog' %}">Блог</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                {{ article.title }}
+              </li>
+            </ol>
+          </nav>
+
+          <!-- Стаття -->
+          <article>
+            <header class="mb-4">
+              <h1>{{ article.title }}</h1>
+              <p class="text-muted">📅 {{ article.date|date:"d.m.Y H:i" }}</p>
+            </header>
+
+            <div class="article-content">{{ article.content|linebreaks }}</div>
+          </article>
+
+          <!-- Навігація -->
+          <div class="d-flex justify-content-between mt-5">
+            <a href="{% url 'blog' %}" class="btn btn-outline-primary">
+              ← Повернутися до блогу
+            </a>
+            <a href="{% url 'contact' %}" class="btn btn-primary">
+              Зв'язатися з нами 📧
+            </a>
+          </div>
+
+          <!-- Поділитися -->
+          <div class="card mt-4">
+            <div class="card-body text-center">
+              <h5>📢 Поділитися статтею</h5>
+              <p>Сподобалась стаття? Поділіться нею з друзями!</p>
+              <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-primary btn-sm">Facebook</button>
+                <button class="btn btn-info btn-sm">Twitter</button>
+                <button class="btn btn-success btn-sm">WhatsApp</button>
+                <button class="btn btn-secondary btn-sm">
+                  Копіювати посилання
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <p>&copy; 2025 MemeLand. Створено з ❤️ для любителів мемів.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

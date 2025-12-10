@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Блог - MemeLand</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Навігаційна панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">🤣 MemeLand</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav me-auto">
+            <a class="nav-link" href="{% url 'index' %}">Головна</a>
+            <a class="nav-link active" href="{% url 'blog' %}">Блог</a>
+            <a class="nav-link" href="{% url 'news' %}">Новини</a>
+            <a class="nav-link" href="{% url 'about' %}">Про нас</a>
+            <a class="nav-link" href="{% url 'contact' %}">Контакти</a>
+          </div>
+          <div class="navbar-nav">
+            {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url 'profile' %}"
+              >👤 {{ user.username }}</a
+            >
+            <a class="nav-link" href="{% url 'logout' %}">Вихід</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Вхід</a>
+            <a class="nav-link" href="{% url 'register' %}">Реєстрація</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1 class="text-center mb-5">📚 Блог про меми</h1>
+
+      {% if articles %}
+      <div class="row">
+        {% for article in articles %}
+        <div class="col-lg-6 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ article.title }}</h5>
+              <p class="text-muted small mb-2">
+                {{ article.date|date:"d.m.Y H:i" }}
+              </p>
+              <p class="card-text">{{ article.content|truncatewords:30 }}</p>
+              <a
+                href="{% url 'article_detail' article.pk %}"
+                class="btn btn-primary"
+                >Читати повністю 📖</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center">
+        <div class="card">
+          <div class="card-body">
+            <h3>😅 Поки що немає статей</h3>
+            <p>
+              Наші експерти працюють над створенням крутого контенту про меми!
+            </p>
+            <p>
+              Поверніться пізніше або
+              <a href="{% url 'contact' %}">зв'яжіться з нами</a>, якщо хочете
+              стати автором.
+            </p>
+            <a href="{% url 'index' %}" class="btn btn-primary"
+              >Повернутися на головну</a
+            >
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Футер -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <p>&copy; 2025 MemeLand. Створено з ❤️ для любителів мемів.</p>
+      </div>
+    </footer>
+
+    <!-- Модалка для налаштування 2FA -->
+    {% if show_2fa_setup %}
+    <div
+      class="modal fade"
+      id="setup2FAModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title">
+              <i class="fas fa-shield-alt"></i> Налаштування безпеки акаунта
+            </h5>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-info">
+              <h6><i class="fas fa-info-circle"></i> Важливо!</h6>
+              <p>
+                Для забезпечення безпеки вашого акаунта необхідно налаштувати
+                двофакторну автентифікацію (2FA).
+              </p>
+            </div>
+
+            <div class="text-center">
+              <h6>🔐 Це займе лише хвилину!</h6>
+              <p>
+                Двофакторна автентифікація захистить ваш акаунт від
+                несанкціонованого доступу.
+              </p>
+
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <a href="{% url 'setup_2fa' %}" class="btn btn-warning btn-lg">
+                  <i class="fas fa-shield-alt"></i> Налаштувати зараз
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  onclick="postpone2FA()"
+                >
+                  Пізніше
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Плаваючий чат-бот (тільки для авторизованих користувачів) -->
+    {% if user.is_authenticated %}
+    <div id="chatWidget" class="chat-widget">
+      <div class="chat-toggle-btn" id="chatToggle">
+        <i class="fas fa-comments"></i>
+      </div>
+
+      <div class="chat-window" id="chatWindow" style="display: none">
+        <div class="chat-header">
+          <div class="chat-title">
+            <i class="fas fa-robot"></i>
+            Помічник пошуку
+          </div>
+          <button class="chat-close" id="chatClose">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot-message">
+            <div class="message-content">
+              <div class="bot-avatar">🤖</div>
+              <div class="message-bubble">
+                Привіт! Допоможу знайти статті та новини. Що шукаєте?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <form id="miniChatForm" class="chat-form">
+            <input
+              type="text"
+              id="miniMessageInput"
+              placeholder="Напишіть запитання..."
+              autocomplete="off"
+            />
+            <button type="submit">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS для чат-віджету -->
+    <style>
+      .chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        font-family: Arial, sans-serif;
+      }
+
+      .chat-toggle-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .chat-toggle-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .chat-window {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        height: 450px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .chat-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .chat-title {
+        font-weight: bold;
+      }
+
+      .chat-close {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+      }
+
+      .chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #f8f9fa;
+      }
+
+      .message {
+        margin-bottom: 15px;
+      }
+
+      .message-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .bot-avatar,
+      .user-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .bot-avatar {
+        background: linear-gradient(135deg, #28a745, #20c997);
+      }
+      .user-avatar {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        font-weight: bold;
+      }
+
+      .message-bubble {
+        background: white;
+        padding: 10px 15px;
+        border-radius: 18px;
+        max-width: 250px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        white-space: pre-line;
+        font-size: 14px;
+      }
+
+      .user-message .message-content {
+        flex-direction: row-reverse;
+      }
+      .user-message .message-bubble {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .chat-input-area {
+        padding: 15px;
+        background: white;
+        border-top: 1px solid #eee;
+      }
+
+      .chat-form {
+        display: flex;
+        gap: 10px;
+      }
+
+      .chat-form input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        outline: none;
+      }
+
+      .chat-form button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Стилі для результатів пошуку */
+      .search-results {
+        max-width: 280px;
+      }
+      .result-section {
+        margin-bottom: 15px;
+      }
+      .section-title {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+      .result-item {
+        margin-bottom: 8px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .result-link {
+        display: block;
+        padding: 10px 12px;
+        background: #f8f9fa;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .result-link:hover {
+        background: #e3f2fd;
+        border-left-color: #667eea;
+        transform: translateX(2px);
+      }
+      .result-title {
+        font-weight: 500;
+        color: #333;
+        font-size: 13px;
+        line-height: 1.3;
+        margin-bottom: 4px;
+      }
+      .result-meta {
+        font-size: 11px;
+        color: #666;
+      }
+    </style>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+    {% if show_2fa_setup %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = new bootstrap.Modal(
+          document.getElementById("setup2FAModal")
+        );
+        modal.show();
+      });
+
+      function postpone2FA() {
+        var modal = bootstrap.Modal.getInstance(
+          document.getElementById("setup2FAModal")
+        );
+        modal.hide();
+
+        setTimeout(function () {
+          var toastHTML = `
+                    <div class="toast align-items-center text-white bg-warning border-0" role="alert" 
+                         style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="fas fa-exclamation-triangle"></i> Не забудьте налаштувати 2FA в профілі!
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                                    data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
+                `;
+          document.body.insertAdjacentHTML("beforeend", toastHTML);
+          var toast = new bootstrap.Toast(document.querySelector(".toast"));
+          toast.show();
+        }, 500);
+      }
+    </script>
+    {% endif %}
+
+    <!-- JavaScript для чат-віджету -->
+    {% if user.is_authenticated %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const chatToggle = document.getElementById("chatToggle");
+        const chatWindow = document.getElementById("chatWindow");
+        const chatClose = document.getElementById("chatClose");
+        const miniChatForm = document.getElementById("miniChatForm");
+        const miniMessageInput = document.getElementById("miniMessageInput");
+        const chatMessages = document.getElementById("chatMessages");
+
+        let isOpen = false;
+
+        chatToggle.addEventListener("click", function () {
+          if (isOpen) {
+            closeChat();
+          } else {
+            openChat();
+          }
+        });
+
+        chatClose.addEventListener("click", closeChat);
+
+        miniChatForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const message = miniMessageInput.value.trim();
+          if (!message) return;
+
+          addUserMessage(message);
+          miniMessageInput.value = "";
+
+          try {
+            const response = await fetch("/chatbot/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({ message: message }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+              addBotMessage("❌ " + data.error);
+            } else if (data.results) {
+              addBotSearchResults(data.results);
+            } else {
+              addBotMessage(data.response || "Помилка пошуку");
+            }
+          } catch (error) {
+            addBotMessage("❌ Помилка з'єднання");
+          }
+        });
+
+        function openChat() {
+          chatWindow.style.display = "flex";
+          isOpen = true;
+          chatToggle.innerHTML = '<i class="fas fa-times"></i>';
+        }
+
+        function closeChat() {
+          chatWindow.style.display = "none";
+          isOpen = false;
+          chatToggle.innerHTML = '<i class="fas fa-comments"></i>';
+        }
+
+        function addUserMessage(message) {
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message user-message";
+          messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="user-avatar">{{ user.username|first|upper }}</div>
+                        <div class="message-bubble">${escapeHtml(message)}</div>
+                    </div>
+                `;
+          chatMessages.appendChild(messageDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addBotMessage(response) {
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message bot-message";
+          messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="bot-avatar">🤖</div>
+                        <div class="message-bubble">${escapeHtml(
+                          response
+                        )}</div>
+                    </div>
+                `;
+          chatMessages.appendChild(messageDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addBotSearchResults(results) {
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message bot-message";
+
+          let resultsHTML =
+            '<div class="message-content"><div class="bot-avatar">🤖</div><div class="search-results">';
+
+          results.forEach((section) => {
+            resultsHTML += `<div class="result-section">`;
+            resultsHTML += `<div class="section-title">${section.title}</div>`;
+
+            section.items.forEach((item) => {
+              const linkUrl =
+                section.type === "articles" ? `/article/${item.id}/` : `/news/`;
+              const dateStr = new Date(item.date).toLocaleDateString("uk-UA");
+              const authorInfo = item.author ? ` • ${item.author}` : "";
+
+              resultsHTML += `
+                            <div class="result-item">
+                                <a href="${linkUrl}" class="result-link" target="_blank">
+                                    <div class="result-title">${escapeHtml(
+                                      item.title
+                                    )}</div>
+                                    <div class="result-meta">${dateStr}${authorInfo}</div>
+                                </a>
+                            </div>
+                        `;
+            });
+
+            resultsHTML += "</div>";
+          });
+
+          resultsHTML += "</div></div>";
+          messageDiv.innerHTML = resultsHTML;
+
+          chatMessages.appendChild(messageDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+          const div = document.createElement("div");
+          div.textContent = text;
+          return div.innerHTML;
+        }
+
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                  cookie.substring(name.length + 1)
+                );
+                break;
+              }
+            }
+          }
+          return cookieValue;
+        }
+      });
+    </script>
+    {% endif %}
+  </body>
+</html>

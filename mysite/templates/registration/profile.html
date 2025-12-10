@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Профіль - Мемний Блог</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .profile-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+      .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: white;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'blog' %}">🤣 Мемний Блог</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="navbar-nav me-auto">
+            <a class="nav-link" href="{% url 'blog' %}">Головна</a>
+            <a class="nav-link" href="{% url 'news' %}">Новини</a>
+            <a class="nav-link" href="{% url 'about' %}">Про нас</a>
+            <a class="nav-link" href="{% url 'contact' %}">Контакти</a>
+          </div>
+          <div class="navbar-nav">
+            {% if user.is_authenticated %}
+            <a class="nav-link active" href="{% url 'profile' %}"
+              >{{ user.username }}</a
+            >
+            <a class="nav-link" href="{% url 'logout' %}">Вихід</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Вхід</a>
+            <a class="nav-link" href="{% url 'register' %}">Реєстрація</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card profile-card">
+            <div class="card-header bg-info text-white text-center">
+              <h4><i class="fas fa-user"></i> Профіль користувача</h4>
+            </div>
+            <div class="card-body p-5">
+              {% if messages %} {% for message in messages %}
+              <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                role="alert"
+              >
+                {{ message }}
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                ></button>
+              </div>
+              {% endfor %} {% endif %}
+
+              <div class="row">
+                <div class="col-md-4 text-center">
+                  <div class="avatar mb-3">{{ user.username|first|upper }}</div>
+                  <h5>{{ user.username }}</h5>
+                  <p class="text-muted">{{ user.email }}</p>
+                </div>
+
+                <div class="col-md-8">
+                  <h5>📊 Інформація про акаунт</h5>
+                  <table class="table table-borderless">
+                    <tr>
+                      <td><strong>Ім'я користувача:</strong></td>
+                      <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email:</strong></td>
+                      <td>{{ user.email|default:"Не вказано" }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Дата реєстрації:</strong></td>
+                      <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Останній вхід:</strong></td>
+                      <td>
+                        {{ user.last_login|date:"d.m.Y H:i"|default:"Ніколи" }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>2FA статус:</strong></td>
+                      <td>
+                        {% if has_2fa %}
+                        <span class="badge bg-success">✅ Активовано</span>
+                        {% else %}
+                        <span class="badge bg-warning">⚠️ Не активовано</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  </table>
+
+                  <hr />
+
+                  <h5>🔐 Безпека</h5>
+                  {% if not has_2fa %}
+                  <div class="alert alert-warning">
+                    <h6><i class="fas fa-shield-alt"></i> Рекомендація</h6>
+                    <p>
+                      Для підвищення безпеки вашого акаунта рекомендуємо
+                      налаштувати двофакторну автентифікацію (2FA).
+                    </p>
+                    <a href="{% url 'setup_2fa' %}" class="btn btn-warning">
+                      <i class="fas fa-shield-alt"></i> Налаштувати 2FA
+                    </a>
+                  </div>
+                  {% else %}
+                  <div class="alert alert-success">
+                    <h6><i class="fas fa-check-circle"></i> 2FA активовано</h6>
+                    <p>Ваш акаунт захищено двофакторною автентифікацією.</p>
+                    <p>
+                      <strong>Резервні коди:</strong> {{ backup_tokens|length }}
+                      доступно
+                    </p>
+                  </div>
+                  {% endif %}
+
+                  <div
+                    class="d-grid gap-2 d-md-flex justify-content-md-end mt-4"
+                  >
+                    <a
+                      href="{% url 'password_change' %}"
+                      class="btn btn-outline-primary"
+                    >
+                      <i class="fas fa-key"></i> Змінити пароль
+                    </a>
+                    {% if has_2fa %}
+                    <button
+                      type="button"
+                      class="btn btn-outline-warning"
+                      data-bs-toggle="modal"
+                      data-bs-target="#disable2FAModal"
+                    >
+                      <i class="fas fa-shield-alt"></i> Вимкнути 2FA
+                    </button>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal для вимкнення 2FA -->
+    {% if has_2fa %}
+    <div class="modal fade" id="disable2FAModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Вимкнення 2FA</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Ви впевнені, що хочете вимкнути двофакторну автентифікацію?</p>
+            <p class="text-danger">
+              <strong>Увага:</strong> Це зменшить безпеку вашого акаунта.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Скасувати
+            </button>
+            <form method="post" style="display: inline">
+              {% csrf_token %}
+              <input type="hidden" name="disable_2fa" value="1" />
+              <button type="submit" class="btn btn-danger">Вимкнути 2FA</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </body>
+</html>
