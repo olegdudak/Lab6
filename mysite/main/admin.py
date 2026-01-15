@@ -5,8 +5,8 @@ from .models import Article, News
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'date']
-    list_filter = ['date']
+    list_display = ['title', 'category', 'date']
+    list_filter = ['date', 'category']
     search_fields = ['title', 'content']
 
 

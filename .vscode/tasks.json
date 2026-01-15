@@ -12,9 +12,12 @@
       "isBackground": true,
       "problemMatcher": [],
       "group": "build",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
       "presentation": {
         "echo": true,
-        "reveal": "always",
+        "reveal": "never",
         "focus": false,
         "panel": "new",
         "showReuseMessage": true,

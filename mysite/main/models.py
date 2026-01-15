@@ -4,8 +4,15 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Article(models.Model):
+    CATEGORY_CHOICES = [
+        ('memes', 'Меми'),
+        ('pupils', 'Учні'),
+        ('other', 'Інше'),
+    ]
     title = models.CharField(max_length=200)
     content = models.TextField()
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='memes')
+    video = models.FileField(upload_to='videos/', blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
